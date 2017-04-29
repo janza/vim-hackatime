@@ -116,7 +116,13 @@ let s:VERSION = '4.0.15'
                     let cmd = cmd + ['--language', &filetype]
                 endif
             endif
-            call jobstart(s:JoinArgs(cmd))
+            if v:version >= 800
+                call job_start(s:JoinArgs(cmd))
+            elseif has('nvim')
+                call jobstart(s:JoinArgs(cmd))
+            else
+                call system(s:JoinArgs(cmd))
+            endif
             call s:SetLastHeartbeat(a:time, a:time, file)
         endif
     endfunction
