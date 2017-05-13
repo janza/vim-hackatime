@@ -9,7 +9,7 @@ from base64 import b64encode
 
 
 class Storage():
-    DB_FILE = os.path.join(os.path.expanduser('~'), '.wakatime.db')
+    DB_FILE = os.path.join(os.path.expanduser('~'), '.hackatime.db')
 
     def __init__(self):
         self.DB_FILE

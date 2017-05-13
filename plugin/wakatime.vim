@@ -1,9 +1,8 @@
 " ============================================================================
-" File:        wakatime.vim
+" File:        hackatime.vim
 " Description: Automatic time tracking for Vim.
-" Maintainer:  WakaTime <support@wakatime.com>
 " License:     BSD, see LICENSE.txt for more details.
-" Website:     https://wakatime.com/
+" Website:     https://github.com/janza/vim-hackatime
 " ============================================================================
 
 let s:VERSION = '4.0.15'
@@ -22,43 +21,43 @@ let s:VERSION = '4.0.15'
     let s:false = 0
 
     " Only load plugin once
-    if exists("g:loaded_wakatime")
+    if exists("g:loaded_hackatime")
         finish
     endif
-    let g:loaded_wakatime = s:true
+    let g:loaded_hackatime = s:true
 
     " Backup & Override cpoptions
     let s:old_cpo = &cpo
     set cpo&vim
 
     " Script Globals
-    let s:home = expand("$WAKATIME_HOME")
-    if s:home == '$WAKATIME_HOME'
+    let s:home = expand("$hackaTIME_HOME")
+    if s:home == '$hackaTIME_HOME'
         let s:home = expand("$HOME")
     endif
     let s:cli_location = expand("<sfile>:p:h") . '/logtime.py'
-    let s:data_file = s:home . '/.wakatime.data'
+    let s:data_file = s:home . '/.hackatime.data'
     let s:local_cache_expire = 10  " seconds between reading s:data_file
     let s:last_heartbeat = [0, 0, '']
 
     " Set default python binary location
-    if !exists("g:wakatime_PythonBinary")
-        let g:wakatime_PythonBinary = 'python'
+    if !exists("g:hackatime_PythonBinary")
+        let g:hackatime_PythonBinary = 'python'
     endif
 
     " Set default heartbeat frequency in minutes
-    if !exists("g:wakatime_HeartbeatFrequency")
-        let g:wakatime_HeartbeatFrequency = 2
+    if !exists("g:hackatime_HeartbeatFrequency")
+        let g:hackatime_HeartbeatFrequency = 2
     endif
 
     " Set default influx db hostname
-    if !exists("g:wakatime_InfluxHost")
-        let g:wakatime_InfluxHost = ''
+    if !exists("g:hackatime_InfluxHost")
+        let g:hackatime_InfluxHost = ''
     endif
 
     " Set default influx db basic auth header
-    if !exists("g:wakatime_BasicAuth")
-        let g:wakatime_BasicAuth = ''
+    if !exists("g:hackatime_BasicAuth")
+        let g:hackatime_BasicAuth = ''
     endif
 
 " }}}
@@ -91,12 +90,12 @@ let s:VERSION = '4.0.15'
         if file == ''
             let file = a:last[2]
         endif
-        if file != '' && g:wakatime_BasicAuth != '' && g:wakatime_InfluxHost != ''
-            let python_bin = g:wakatime_PythonBinary
+        if file != '' && g:hackatime_BasicAuth != '' && g:hackatime_InfluxHost != ''
+            let python_bin = g:hackatime_PythonBinary
             let cmd = [s:cli_location]
             let cmd = cmd + ['--entity', file]
-            let cmd = cmd + ['--auth', g:wakatime_BasicAuth]
-            let cmd = cmd + ['--host', g:wakatime_InfluxHost]
+            let cmd = cmd + ['--auth', g:hackatime_BasicAuth]
+            let cmd = cmd + ['--host', g:hackatime_InfluxHost]
             try
                 let cmd = cmd + ['--project', fnamemodify(expand(fugitive#buffer().repo().tree()), ":t")]
             catch
@@ -151,7 +150,7 @@ let s:VERSION = '4.0.15'
 
     function! s:EnoughTimePassed(now, last)
         let prev = a:last[1]
-        if a:now - prev > g:wakatime_HeartbeatFrequency * 60
+        if a:now - prev > g:hackatime_HeartbeatFrequency * 60
             return s:true
         endif
         return s:false
@@ -182,7 +181,7 @@ let s:VERSION = '4.0.15'
 
 " Autocommand Events {{{
 
-    augroup Wakatime
+    augroup hackatime
         autocmd!
         autocmd BufEnter * call s:handleActivity(s:false)
         autocmd VimEnter * call s:handleActivity(s:false)
