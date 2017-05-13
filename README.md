@@ -19,3 +19,8 @@ Installation
 Note: HackaTime depends on [Python](http://www.python.org/getit/) being installed to work correctly. To use a custom python binary:
 
     let g:hackatime_PythonBinary = '/usr/bin/python'
+
+TODO
+----
+
+Release influx/grafana dashboad setup.
